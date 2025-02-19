@@ -1,4 +1,4 @@
-name: Python CI/CD
+name: Python CI/CD Pipeline
 
 on:
   push:
@@ -9,9 +9,8 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Clonar o repositório
         uses: actions/checkout@v3
@@ -25,8 +24,27 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar o repositório
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
       - name: Definir o PYTHONPATH
         run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Rodar testes
         run: pytest
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulando Deploy
+        run: echo "Deploy realizado com sucesso! 🚀"
