@@ -1,6 +1,12 @@
 name: Python CI/CD
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -18,6 +24,9 @@ jobs:
       - name: Instalar dependências
         run: |
           pip install -r requirements.txt
+
+      - name: Definir o PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Rodar testes
         run: pytest
